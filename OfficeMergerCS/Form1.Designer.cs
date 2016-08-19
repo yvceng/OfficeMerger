@@ -302,7 +302,7 @@
             // 
             this.cbSheetSelect.FormattingEnabled = true;
             this.cbSheetSelect.Items.AddRange(new object[] {
-            "0",
+            "全部",
             "1",
             "2",
             "3",
@@ -340,8 +340,9 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.btExport);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "表格合并器";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);

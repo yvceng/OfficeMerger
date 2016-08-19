@@ -100,18 +100,18 @@ namespace OfficeMergerCS
         }
         //以下是網路找來的陣列資料^^
         private Object[,] myData = new String[,]
-        { 
-            { "車牌號", "類型", "品 牌", "型 號", "顏 色", "附加費證號", "車架號" }, 
-            { "浙KA3676", "危險品", "貨車", "鐵風SZG9220YY", "白", "1110708900", "022836" }, 
-            { "浙KA4109", "危險品", "貨車", "解放CA4110P1K2", "白", "223132", "010898" }, 
-            { "浙KA0001A", "危險品", "貨車", "南明LSY9190WS", "白", "1110205458", "0474636" }, 
-            { "浙KA0493", "上普貨", "貨車", "解放LSY9190WS", "白", "1110255971", "0094327" }, 
-            { "浙KA1045", "普貨", "貨車", "解放LSY9171WCD", "藍", "1110391226", "0516003" }, 
-            { "浙KA1313", "普貨", "貨車", "解放9190WCD", "藍", "1110315027", "0538701" }, 
-            { "浙KA1322", "普貨", "貨車", "解放LSY9190WS", "藍", "24323332", "0538716" }, 
-            { "浙KA1575", "普貨", "貨車", "解放LSY9181WCD", "藍", "1110314149", "0113018" }, 
-            { "浙KA1925", "普貨", "貨車", "解放LSY9220WCD", "藍", "1110390626", "00268729" }, 
-            { "浙KA2258", "普貨", "貨車", "解放LSY9220WSP", "藍", "111048152", "00320" } 
+        {
+            { "車牌號", "類型", "品 牌", "型 號", "顏 色", "附加費證號", "車架號" },
+            { "浙KA3676", "危險品", "貨車", "鐵風SZG9220YY", "白", "1110708900", "022836" },
+            { "浙KA4109", "危險品", "貨車", "解放CA4110P1K2", "白", "223132", "010898" },
+            { "浙KA0001A", "危險品", "貨車", "南明LSY9190WS", "白", "1110205458", "0474636" },
+            { "浙KA0493", "上普貨", "貨車", "解放LSY9190WS", "白", "1110255971", "0094327" },
+            { "浙KA1045", "普貨", "貨車", "解放LSY9171WCD", "藍", "1110391226", "0516003" },
+            { "浙KA1313", "普貨", "貨車", "解放9190WCD", "藍", "1110315027", "0538701" },
+            { "浙KA1322", "普貨", "貨車", "解放LSY9190WS", "藍", "24323332", "0538716" },
+            { "浙KA1575", "普貨", "貨車", "解放LSY9181WCD", "藍", "1110314149", "0113018" },
+            { "浙KA1925", "普貨", "貨車", "解放LSY9220WCD", "藍", "1110390626", "00268729" },
+            { "浙KA2258", "普貨", "貨車", "解放LSY9220WSP", "藍", "111048152", "00320" }
         };
         private Object[,] myArray;
 
@@ -252,92 +252,100 @@ namespace OfficeMergerCS
         {
             int MAXLINE = 5000;
             int i = 0, j = 0, k = 0, m = 0;//m为总行数
-            int iCount = lbContent.Items.Count;
             int fileCount = lvFile.Items.Count;
             string filename;
             int eCount = 0;//有效工作簿数
             int sCount = 0;//当前表中工作簿数
             Point point;
-            myArray = new String[MAXLINE, iCount + 1];//最多千行
-            List<Array> ListOfLine = new List<Array>(); //所有的读取行集合
-            String[] myLine = new String[iCount];   //单行对象
             Object missing = Type.Missing;
+
+            int iCount = lbContent.Items.Count;
+            //重点区域，范围型读取单元格区域
+            RangeSelector mainRange = new RangeSelector(tbMainRange.Text);
+            //预判断块读取还是固定位置读取，初始化总数组大小
+            if (mainRange.getWidth() > 0)
+                myArray = new String[MAXLINE, mainRange.getWidth() + 1];//最多千行
+            else
+                myArray = new String[MAXLINE, iCount + 1];//最多千行
+
             //開啟一個新的應用程式
             myExcel = new Excel.Application();
-            if (iCount > 1)
+            for (i = 0; i < fileCount; i++)
             {
-                for (i = 0; i < fileCount; i++)
-                {
-                    //停用警告訊息
-                    myExcel.DisplayAlerts = false;
-                    //讓Excel文件可見
-                    myExcel.Visible = true;
-                    //引用第一個活頁簿
-                    myBook = myExcel.Workbooks.Open(lvFile.Items[i].SubItems[2].Text, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
-                    //設定活頁簿焦點
-                    myBook.Activate();
-                    //判断所有工作簿
-                    sCount = myBook.Worksheets.Count;
-                    for (k = 1; k <= sCount; k++)
-                    {
-                        mySheet = (Worksheet)myBook.Worksheets[k];
-                        //設工作表焦點
-                        mySheet.Activate();
-                        //大表判断条件
-                        if (cbSheetSelect.Text != "全部" && Int16.Parse(cbSheetSelect.Text) != k) continue;
-                        if (tbSheetPos.Text != "")
-                        {
-                            point = pointPos(tbSheetPos.Text);
-                            if (mySheet.Cells[point.Y, point.X].Value != tbSheetCont.Text) continue;
-                        }
-                        eCount++;
-                        //准备读取单元格相关信息
-                        RangeSelector[] rsContentA = new RangeSelector[iCount];
-                        for (j = 0; j < iCount; j++)
-                        {
-                            rsContentA[j] = new RangeSelector(lbContent.Items[j].ToString());
-                        }
-                        //重点区域
-                        RangeSelector mainRange = new RangeSelector(tbMainRange.Text);
-                        string mainStart = tbMainStart.Text;
-                        string mainEnd = tbMainEnd.Text;
-                        filename = lvFile.Items[i].SubItems[0].Text;    //提取文件名
-                        //重点区域起始位置判断
-                        if (mainRange.Count() > 1)
-                        {
-                            for (j = 0; j < mainRange.Count(); j++)
-                            {
-                                Point nowPos = mainRange.getCurPos();
-                                string myCell = Convert.ToString(mySheet.Cells[nowPos.Y, nowPos.X].Value);
-                                if (myCell == mainStart) break;
+                //停用警告訊息
+                myExcel.DisplayAlerts = false;
+                //讓Excel文件可見
+                myExcel.Visible = true;
+                //引用第一個活頁簿
+                myBook = myExcel.Workbooks.Open(lvFile.Items[i].SubItems[2].Text, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
+                //設定活頁簿焦點
+                myBook.Activate();
+                //判断所有工作簿
+                sCount = myBook.Worksheets.Count;
 
-                                foreach (RangeSelector cont in rsContentA)
-                                {
-                                    cont.acc();
-                                }
-                                mainRange.acc();
-                            }
-                            //读取内容
-                            while (m < MAXLINE)    //最大读取行数上限估计
-                            {
-                                mainRange.acc();
-                                Point nowPos = mainRange.getCurPos();
-                                string myCell = Convert.ToString(mySheet.Cells[nowPos.Y, nowPos.X].Value);
-                                if (myCell == null) break;
-                                j = 0;
-                                foreach (RangeSelector cont in rsContentA)
-                                {
-                                    cont.acc();
-                                    point = cont.getCurPos();
-                                    myArray[m, j] = Convert.ToString(mySheet.Cells[point.Y, point.X].Value);    //不管什么类型都转为字符串
-                                    j++;
-                                }
-                                myArray[m, j] = filename;   
-                                m++;
-                            }
-                        }
-                        else//只运行一次
+
+                for (k = 1; k <= sCount; k++)
+                {
+                    //大表判断条件
+                    if (cbSheetSelect.Text != "全部" && Int16.Parse(cbSheetSelect.Text) != k) continue;
+                    //选择当前表
+                    mySheet = (Worksheet)myBook.Worksheets[k];
+                    //設工作表焦點
+                    mySheet.Activate();
+                    //特征值判断
+                    if (tbSheetPos.Text != "")
+                    {
+                        point = pointPos(tbSheetPos.Text);
+                        if (mySheet.Cells[point.Y, point.X].Value != tbSheetCont.Text) continue;
+                    }
+                    eCount++;
+                    filename = lvFile.Items[i].SubItems[0].Text;    //提取文件名
+                    string mainStart = tbMainStart.Text;
+                    string mainEnd = tbMainEnd.Text;
+                    //判断选择哪种模式
+                    if (mainRange.Count() > 1)
+                    {
+                        mainRange = new RangeSelector(tbMainRange.Text);//重新恢复原区域值
+                        //重点区域起始位置判断
+                        Point nowPos = mainRange.getCurPos();
+                        for (j = 0; j < mainRange.Count(); j++)
                         {
+                            string myCell = Convert.ToString(mySheet.Cells[nowPos.Y, nowPos.X].Value);
+                            if (mainStart == "") break;
+                            if (myCell == mainStart) break;
+                            mainRange.acc();
+                        }
+                        //mainRange.lineacc();    //移到关键字下一行
+                        mainRange.SetStartVal(mainRange.getCurPos());
+                        //读取内容
+                        while (m < MAXLINE)    //最大读取行数上限估计
+                        {
+                            nowPos = mainRange.getCurPos();
+                            string myCell = Convert.ToString(mySheet.Cells[nowPos.Y, nowPos.X].Value);
+                            if (myCell == null) break;
+                            if (mainRange.pos > mainRange.Count()) break;//读取完了就退出
+                            for (j = 0; j < mainRange.getWidth(); j++)
+                            {
+                                point = mainRange.getCurPos();
+                                myArray[m, j] = Convert.ToString(mySheet.Cells[point.Y, point.X].Value);    //不管什么类型都转为字符串
+                                mainRange.acc();
+                            }
+                            myArray[m, j] = filename;
+                            m++;
+                        }
+                    }
+                    else
+                    {
+                        //准备读取单元格相关信息，固定位置读取单元格
+                        if (iCount >= 1)
+                        {
+                            List<Array> ListOfLine = new List<Array>(); //所有的读取行集合
+                            String[] myLine = new String[iCount];   //单行对象
+                            RangeSelector[] rsContentA = new RangeSelector[iCount];
+                            for (j = 0; j < iCount; j++)
+                            {
+                                rsContentA[j] = new RangeSelector(lbContent.Items[j].ToString());
+                            }
                             j = 0;
                             foreach (RangeSelector cont in rsContentA)
                             {
@@ -346,14 +354,14 @@ namespace OfficeMergerCS
                                 myArray[m, j] = Convert.ToString(mySheet.Cells[point.Y, point.X].Value);    //不管什么类型都转为字符串
                                 j++;
                             }
-                            myArray[m, j] = filename;   
+                            myArray[m, j] = filename;
                             m++;
                         }
                     }
-                    //关闭当前活页簿
-                    myBook.Close();
-                    System.Windows.Forms.Application.DoEvents();
                 }
+                //关闭当前活页簿
+                myBook.Close();
+                System.Windows.Forms.Application.DoEvents();
             }
             myExcel.Quit();
         }
@@ -408,6 +416,19 @@ namespace OfficeMergerCS
         {
             SetVal(s);
         }
+        //重设起始位置
+        public void SetStartVal(Point sp1)
+        {
+            p1 = sp1;
+            type = 3;
+            width = p2.X - p1.X + 1;
+            height = p2.Y - p1.Y + 1;
+            pos = 0;
+        }
+        public int getWidth()
+        {
+            return width;
+        }
         public void SetVal(string s)
         {
             string s1, s2;
@@ -452,18 +473,26 @@ namespace OfficeMergerCS
             }
             if (type == 3)
             {
-                np.X = p1.X + (pos % (height * width)) / width;
-                np.Y = p1.Y + pos % height;
+                np.Y = p1.Y + (pos % (height * width)) / width;
+                np.X = p1.X + pos % width;
                 return np;
             }
             return np;
         }
-        public void acc()
+        //移到下一格
+        public bool acc()
         {
             pos++;
-            return;
+            if (pos >= Count()) return false;
+            return true;
         }
-
+        //移到下一行
+        public bool lineacc()
+        {
+            pos += width;
+            if (pos >= Count()) return false;
+            return true;
+        }
         //字符串转坐标
         private Point pointPos(string strPos)
         {
