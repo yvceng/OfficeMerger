@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btExport = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tbDataTag = new System.Windows.Forms.TextBox();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.btnOpen = new System.Windows.Forms.Button();
             this.lvFile = new System.Windows.Forms.ListView();
@@ -46,6 +46,7 @@
             this.btRead = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.tbMainEnd = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tbMainStart = new System.Windows.Forms.TextBox();
@@ -58,6 +59,9 @@
             this.tbSheetPos = new System.Windows.Forms.TextBox();
             this.cbSheetSelect = new System.Windows.Forms.ComboBox();
             this.btClear = new System.Windows.Forms.Button();
+            this.btReadWord = new System.Windows.Forms.Button();
+            this.btReplace = new System.Windows.Forms.Button();
+            this.btAutoEdit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -67,21 +71,21 @@
             // 
             // btExport
             // 
-            this.btExport.Location = new System.Drawing.Point(408, 386);
+            this.btExport.Location = new System.Drawing.Point(391, 376);
             this.btExport.Name = "btExport";
             this.btExport.Size = new System.Drawing.Size(75, 23);
-            this.btExport.TabIndex = 0;
+            this.btExport.TabIndex = 9;
             this.btExport.Text = "生成表格";
             this.btExport.UseVisualStyleBackColor = true;
             this.btExport.Click += new System.EventHandler(this.button1_Click);
             // 
-            // textBox1
+            // tbDataTag
             // 
-            this.textBox1.Location = new System.Drawing.Point(182, 388);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 21);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.tbDataTag.Location = new System.Drawing.Point(17, 175);
+            this.tbDataTag.Name = "tbDataTag";
+            this.tbDataTag.Size = new System.Drawing.Size(119, 21);
+            this.tbDataTag.TabIndex = 6;
+            this.tbDataTag.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // fileSystemWatcher1
             // 
@@ -134,22 +138,23 @@
             this.groupBox1.Controls.Add(this.lbContent);
             this.groupBox1.Location = new System.Drawing.Point(454, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(156, 368);
+            this.groupBox1.Size = new System.Drawing.Size(156, 357);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "读取范围";
+            this.groupBox1.Text = "多点读取";
             // 
             // tbAdd
             // 
-            this.tbAdd.Location = new System.Drawing.Point(30, 222);
+            this.tbAdd.Location = new System.Drawing.Point(30, 265);
             this.tbAdd.Name = "tbAdd";
             this.tbAdd.Size = new System.Drawing.Size(105, 21);
             this.tbAdd.TabIndex = 2;
             this.tbAdd.TextChanged += new System.EventHandler(this.tbAdd_TextChanged);
+            this.tbAdd.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbAdd_KeyDown);
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(30, 248);
+            this.btnAdd.Location = new System.Drawing.Point(30, 291);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(105, 33);
             this.btnAdd.TabIndex = 1;
@@ -163,7 +168,7 @@
             this.lbContent.ItemHeight = 12;
             this.lbContent.Location = new System.Drawing.Point(30, 20);
             this.lbContent.Name = "lbContent";
-            this.lbContent.Size = new System.Drawing.Size(105, 196);
+            this.lbContent.Size = new System.Drawing.Size(105, 220);
             this.lbContent.TabIndex = 0;
             this.lbContent.SelectedIndexChanged += new System.EventHandler(this.lbContent_SelectedIndexChanged);
             this.lbContent.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
@@ -181,10 +186,10 @@
             // 
             // btRead
             // 
-            this.btRead.Location = new System.Drawing.Point(307, 386);
+            this.btRead.Location = new System.Drawing.Point(290, 376);
             this.btRead.Name = "btRead";
             this.btRead.Size = new System.Drawing.Size(95, 23);
-            this.btRead.TabIndex = 5;
+            this.btRead.TabIndex = 8;
             this.btRead.Text = "读取内容";
             this.btRead.UseVisualStyleBackColor = true;
             this.btRead.Click += new System.EventHandler(this.btRead_Click);
@@ -192,38 +197,49 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.tbMainEnd);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.tbMainStart);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.tbMainRange);
-            this.groupBox2.Location = new System.Drawing.Point(292, 164);
+            this.groupBox2.Controls.Add(this.tbDataTag);
+            this.groupBox2.Location = new System.Drawing.Point(292, 148);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(156, 216);
+            this.groupBox2.Size = new System.Drawing.Size(156, 221);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "重点区域";
+            this.groupBox2.Text = "区块读取";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(28, 142);
+            this.label3.Location = new System.Drawing.Point(34, 110);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(89, 12);
             this.label3.TabIndex = 7;
             this.label3.Text = "结束单元格内容";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(52, 158);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(53, 12);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "数据备注";
+            // 
             // tbMainEnd
             // 
-            this.tbMainEnd.Location = new System.Drawing.Point(17, 157);
+            this.tbMainEnd.Location = new System.Drawing.Point(17, 129);
             this.tbMainEnd.Name = "tbMainEnd";
-            this.tbMainEnd.Size = new System.Drawing.Size(118, 21);
-            this.tbMainEnd.TabIndex = 6;
+            this.tbMainEnd.Size = new System.Drawing.Size(119, 21);
+            this.tbMainEnd.TabIndex = 5;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(28, 88);
+            this.label2.Location = new System.Drawing.Point(34, 65);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 12);
             this.label2.TabIndex = 5;
@@ -231,15 +247,15 @@
             // 
             // tbMainStart
             // 
-            this.tbMainStart.Location = new System.Drawing.Point(17, 103);
+            this.tbMainStart.Location = new System.Drawing.Point(17, 83);
             this.tbMainStart.Name = "tbMainStart";
-            this.tbMainStart.Size = new System.Drawing.Size(118, 21);
+            this.tbMainStart.Size = new System.Drawing.Size(119, 21);
             this.tbMainStart.TabIndex = 4;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 36);
+            this.label1.Location = new System.Drawing.Point(40, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 12);
             this.label1.TabIndex = 3;
@@ -247,9 +263,9 @@
             // 
             // tbMainRange
             // 
-            this.tbMainRange.Location = new System.Drawing.Point(17, 51);
+            this.tbMainRange.Location = new System.Drawing.Point(17, 37);
             this.tbMainRange.Name = "tbMainRange";
-            this.tbMainRange.Size = new System.Drawing.Size(118, 21);
+            this.tbMainRange.Size = new System.Drawing.Size(119, 21);
             this.tbMainRange.TabIndex = 2;
             // 
             // groupBox3
@@ -261,7 +277,7 @@
             this.groupBox3.Controls.Add(this.cbSheetSelect);
             this.groupBox3.Location = new System.Drawing.Point(292, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(156, 137);
+            this.groupBox3.Size = new System.Drawing.Size(156, 119);
             this.groupBox3.TabIndex = 6;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "活页簿";
@@ -325,11 +341,44 @@
             this.btClear.UseVisualStyleBackColor = true;
             this.btClear.Click += new System.EventHandler(this.btClear_Click);
             // 
+            // btReadWord
+            // 
+            this.btReadWord.Location = new System.Drawing.Point(290, 405);
+            this.btReadWord.Name = "btReadWord";
+            this.btReadWord.Size = new System.Drawing.Size(95, 23);
+            this.btReadWord.TabIndex = 8;
+            this.btReadWord.Text = "读取Word";
+            this.btReadWord.UseVisualStyleBackColor = true;
+            this.btReadWord.Click += new System.EventHandler(this.btReadWord_Click);
+            // 
+            // btReplace
+            // 
+            this.btReplace.Location = new System.Drawing.Point(391, 406);
+            this.btReplace.Name = "btReplace";
+            this.btReplace.Size = new System.Drawing.Size(75, 23);
+            this.btReplace.TabIndex = 9;
+            this.btReplace.Text = "替换文字";
+            this.btReplace.UseVisualStyleBackColor = true;
+            this.btReplace.Click += new System.EventHandler(this.btReplace_Click);
+            // 
+            // btAutoEdit
+            // 
+            this.btAutoEdit.Location = new System.Drawing.Point(477, 405);
+            this.btAutoEdit.Name = "btAutoEdit";
+            this.btAutoEdit.Size = new System.Drawing.Size(95, 23);
+            this.btAutoEdit.TabIndex = 10;
+            this.btAutoEdit.Text = "批量修改";
+            this.btAutoEdit.UseVisualStyleBackColor = true;
+            this.btAutoEdit.Click += new System.EventHandler(this.btAutoEdit_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(618, 443);
+            this.Controls.Add(this.btAutoEdit);
+            this.Controls.Add(this.btReplace);
+            this.Controls.Add(this.btReadWord);
             this.Controls.Add(this.btClear);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -337,7 +386,6 @@
             this.Controls.Add(this.btRead);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lvFile);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.btExport);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -353,14 +401,13 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button btExport;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tbDataTag;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.Button btnOpen;
         private System.Windows.Forms.ListView lvFile;
@@ -387,6 +434,10 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btClear;
+        private System.Windows.Forms.Button btReadWord;
+        private System.Windows.Forms.Button btReplace;
+        private System.Windows.Forms.Button btAutoEdit;
+        private System.Windows.Forms.Label label6;
     }
 }
 

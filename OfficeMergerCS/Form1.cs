@@ -31,20 +31,6 @@ namespace OfficeMergerCS
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //加入新的活頁簿 myExcel.Workbooks.Add(true);
-            //停用警告訊息myExcel.DisplayAlerts = false;
-            //讓Excel文件可見 myExcel.Visible = true;
-            //引用第一個活頁簿myBook = myExcel.Workbooks[1];
-            //設定活頁簿焦點myBook.Activate();
-            //引用第一個工作表mySheet = (_Worksheet)myBook.Worksheets[1];
-            //命名工作表的名稱為 "Array"mySheet.Name = "Cells";
-            //設工作表焦點mySheet.Activate(); 
-            //用offset寫入陣列資料myRange = mySheet.get_Range("A2", Type.Missing);myRange.get_Offset(i, j).Select();myRange.Value2 = "'" + myData[i, j]; 
-            //用Cells寫入陣列資料myRange.get_Range(myExcel.Cells[2 + i, 1 + j], myExcel.Cells[2 + i, 1 + j]).Select();myExcel.Cells[2 + i, 1 + j] = "'" + myData[i, j]; 
-            //加入新的工作表在第1張工作表之後myBook.Sheets.Add(Type.Missing, myBook.Worksheets[1], 1, Type.Missing);
-            //引用第2個工作表mySheet = (_Worksheet)myBook.Worksheets[2];
-            //命名工作表的名稱為 "Array"
-
             if (myArray == null)
             {
                 MessageBox.Show("请先读取数据");
@@ -56,7 +42,7 @@ namespace OfficeMergerCS
             //加入新的活頁簿
             myExcel.Workbooks.Add(true);
             //停用警告訊息
-            myExcel.DisplayAlerts = false;
+            myExcel.DisplayAlerts = true;
             //讓Excel文件可見 
             myExcel.Visible = true;
             //引用第一個活頁簿
@@ -86,11 +72,11 @@ namespace OfficeMergerCS
             myBook.SaveAs(PathFile, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing
                 , XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
             //關閉活頁簿 
-            myBook.Close(false, Type.Missing, Type.Missing);
-            //關閉Excel 
-            myExcel.Quit();
-            //釋放Excel資源 
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(myExcel);
+            //myBook.Close(false, Type.Missing, Type.Missing);
+            ////關閉Excel 
+            //myExcel.Quit();
+            ////釋放Excel資源 
+            //System.Runtime.InteropServices.Marshal.ReleaseComObject(myExcel);
             myBook = null;
             mySheet = null;
             myRange = null;
@@ -98,21 +84,6 @@ namespace OfficeMergerCS
 
             GC.Collect();
         }
-        //以下是網路找來的陣列資料^^
-        private Object[,] myData = new String[,]
-        {
-            { "車牌號", "類型", "品 牌", "型 號", "顏 色", "附加費證號", "車架號" },
-            { "浙KA3676", "危險品", "貨車", "鐵風SZG9220YY", "白", "1110708900", "022836" },
-            { "浙KA4109", "危險品", "貨車", "解放CA4110P1K2", "白", "223132", "010898" },
-            { "浙KA0001A", "危險品", "貨車", "南明LSY9190WS", "白", "1110205458", "0474636" },
-            { "浙KA0493", "上普貨", "貨車", "解放LSY9190WS", "白", "1110255971", "0094327" },
-            { "浙KA1045", "普貨", "貨車", "解放LSY9171WCD", "藍", "1110391226", "0516003" },
-            { "浙KA1313", "普貨", "貨車", "解放9190WCD", "藍", "1110315027", "0538701" },
-            { "浙KA1322", "普貨", "貨車", "解放LSY9190WS", "藍", "24323332", "0538716" },
-            { "浙KA1575", "普貨", "貨車", "解放LSY9181WCD", "藍", "1110314149", "0113018" },
-            { "浙KA1925", "普貨", "貨車", "解放LSY9220WCD", "藍", "1110390626", "00268729" },
-            { "浙KA2258", "普貨", "貨車", "解放LSY9220WSP", "藍", "111048152", "00320" }
-        };
         private Object[,] myArray;
 
         private void btnOpen_Click(object sender, EventArgs e)
@@ -121,7 +92,7 @@ namespace OfficeMergerCS
             OpenFileDialog openfiledialog1 = new OpenFileDialog();
             openfiledialog1.Multiselect = true;//允许同时选择多个文件
             //openfiledialog1.InitialDirectory = "c:\\";
-            openfiledialog1.Filter = "2003xls files(*.xls)|*.xls|2007xlsx files(*.xlsx)|*.xlsx|All files(*.*)|*.*";
+            openfiledialog1.Filter = "All files(*.*)|*.*|Word2003(*.doc)|(*.doc)|2003xls files(*.xls)|*.xls|2007xlsx files(*.xlsx)|*.xlsx";
             openfiledialog1.FilterIndex = 1;
             openfiledialog1.RestoreDirectory = true;
             if (openfiledialog1.ShowDialog() == DialogResult.OK)
@@ -186,6 +157,7 @@ namespace OfficeMergerCS
             tbMainRange.Text = omSet.Default.MainRangeSetting;
             tbMainStart.Text = omSet.Default.MainRangeStartSetting;
             tbMainEnd.Text = omSet.Default.MainRangeEndSetting;
+            tbDataTag.Text = omSet.Default.MainRangeDataTag;
 
         }
         // 为ListView设置鼠标右键选中事件。经常需要在右键选中某项时弹出浮动菜单用到。    首先为ListView控件添加MouseClick的Event，然后下面代码：
@@ -228,6 +200,7 @@ namespace OfficeMergerCS
             omSet.Default.MainRangeSetting = tbMainRange.Text;
             omSet.Default.MainRangeStartSetting = tbMainStart.Text;
             omSet.Default.MainRangeEndSetting = tbMainEnd.Text;
+            omSet.Default.MainRangeDataTag = tbDataTag.Text;
             omSet.Default.Save();
             MessageBox.Show("保存成功");
         }
@@ -253,7 +226,7 @@ namespace OfficeMergerCS
             int MAXLINE = 5000;
             int i = 0, j = 0, k = 0, m = 0;//m为总行数
             int fileCount = lvFile.Items.Count;
-            string filename;
+            string DataTag;
             int eCount = 0;//有效工作簿数
             int sCount = 0;//当前表中工作簿数
             Point point;
@@ -264,7 +237,7 @@ namespace OfficeMergerCS
             RangeSelector mainRange = new RangeSelector(tbMainRange.Text);
             //预判断块读取还是固定位置读取，初始化总数组大小
             if (mainRange.getWidth() > 0)
-                myArray = new String[MAXLINE, mainRange.getWidth() + 1];//最多千行
+                myArray = new String[MAXLINE, mainRange.getWidth() + iCount + 1];//最多千行
             else
                 myArray = new String[MAXLINE, iCount + 1];//最多千行
 
@@ -282,8 +255,6 @@ namespace OfficeMergerCS
                 myBook.Activate();
                 //判断所有工作簿
                 sCount = myBook.Worksheets.Count;
-
-
                 for (k = 1; k <= sCount; k++)
                 {
                     //大表判断条件
@@ -299,7 +270,13 @@ namespace OfficeMergerCS
                         if (mySheet.Cells[point.Y, point.X].Value != tbSheetCont.Text) continue;
                     }
                     eCount++;
-                    filename = lvFile.Items[i].SubItems[0].Text;    //提取文件名
+                    //备注列判断
+                    if (tbDataTag.Text == "") DataTag = lvFile.Items[i].SubItems[0].Text;    //未设置备注默认使用文件名
+                    else
+                    {
+                        Point tagpos = pointPos(tbDataTag.Text);
+                        DataTag = Convert.ToString(mySheet.Cells[tagpos.Y, tagpos.X].Value);
+                    }
                     string mainStart = tbMainStart.Text;
                     string mainEnd = tbMainEnd.Text;
                     //判断选择哪种模式
@@ -321,16 +298,17 @@ namespace OfficeMergerCS
                         while (m < MAXLINE)    //最大读取行数上限估计
                         {
                             nowPos = mainRange.getCurPos();
-                            string myCell = Convert.ToString(mySheet.Cells[nowPos.Y, nowPos.X].Value);
-                            if (myCell == null) break;
+                            string lineFirstCell = Convert.ToString(mySheet.Cells[nowPos.Y, nowPos.X].Value);
+                            if (lineFirstCell == null|| lineFirstCell=="") break;   //首字为空
+                            if (lineFirstCell == tbMainEnd.Text) break; //符合结束字符串
                             if (mainRange.pos > mainRange.Count()) break;//读取完了就退出
-                            for (j = 0; j < mainRange.getWidth(); j++)
+                            for (j = 0; j < mainRange.getWidth(); j++)//读取一行
                             {
                                 point = mainRange.getCurPos();
                                 myArray[m, j] = Convert.ToString(mySheet.Cells[point.Y, point.X].Value);    //不管什么类型都转为字符串
                                 mainRange.acc();
                             }
-                            myArray[m, j] = filename;
+                            myArray[m, j] = DataTag;
                             m++;
                         }
                     }
@@ -353,8 +331,9 @@ namespace OfficeMergerCS
                                 point = cont.getCurPos();
                                 myArray[m, j] = Convert.ToString(mySheet.Cells[point.Y, point.X].Value);    //不管什么类型都转为字符串
                                 j++;
+                                if (j > iCount) break;//xxxxxxx
                             }
-                            myArray[m, j] = filename;
+                            myArray[m, j - 1] = DataTag;
                             m++;
                         }
                     }
@@ -398,7 +377,48 @@ namespace OfficeMergerCS
             //myArray.Initialize();
         }
 
+        private void tbAdd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnAdd_Click(sender, e);
+            }
+        }
+        //将所有内容读取保存到myarray
+        private void btReadWord_Click(object sender, EventArgs e)
+        {
 
+            int fileCount = lvFile.Items.Count;
+            WordReader reader = new WordReader();
+            reader.ResetData();
+            for (int i = 0; i < fileCount; i++)
+            {
+                reader.ReadOne(lvFile.Items[i].SubItems[2].Text);
+                reader.dataArray[i, reader.colCount] = lvFile.Items[i].SubItems[0].Text;
+            }
+            myArray = reader.dataArray;
+            MessageBox.Show("读取完毕");
+        }
+
+        private void btReplace_Click(object sender, EventArgs e)
+        {
+            int fileCount = lvFile.Items.Count;
+            WordReader reader = new WordReader();
+            for (int i = 0; i < fileCount; i++)
+            {
+                reader.ReplaceOne(lvFile.Items[i].SubItems[2].Text, "代表推荐人选登记表", "代表候选人初步人选登记表");
+            }
+        }
+        //批量修改excel
+        private void btAutoEdit_Click(object sender, EventArgs e)
+        {
+            int fileCount = lvFile.Items.Count;
+            ExcelReader reader = new ExcelReader();
+            for (int i = 0; i < fileCount; i++)
+            {
+                reader.ReplaceOne(lvFile.Items[i].SubItems[2].Text);
+            }
+        }
     }
 
     class RangeSelector
@@ -433,6 +453,14 @@ namespace OfficeMergerCS
         {
             string s1, s2;
             rangestr = s;
+            if (s == "")
+            {
+                s1 = s;
+                type = 1;
+                p1 = pointPos(s1);
+                width = 0;
+                height = 0;
+            }
             if (s.Contains(":"))
             {
                 int cp = s.IndexOf(":");
